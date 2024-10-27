@@ -23,9 +23,11 @@ DEBUG = os.getenv('DEBUG')
 ALLOWED_HOSTS = []
 
 
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+HOST1 = os.environ.get('RENDER_EXTERNAL_HOSTNAME1')
+HOST2 = os.environ.get('RENDER_EXTERNAL_HOSTNAME2')
+if DEBUG:
+    ALLOWED_HOSTS.append(HOST1)
+    ALLOWED_HOSTS.append(HOST2)
 
 # Application definition
 
@@ -54,6 +56,9 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 3,
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',

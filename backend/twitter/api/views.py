@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
-from .models import Post, PostLike, Follower
+from .models import Post, PostLike, Follower, Profile
 from rest_framework import generics
-from .serializers import UserSerializer,PostSerializer
+from .serializers import UserSerializer,PostSerializer, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.http import Http404
 from rest_framework.views import APIView
@@ -17,6 +17,8 @@ class CreateUserView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            user = User.objects.get(pk=serializer.data['id'])
+            profile = Profile.objects.create(user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -26,6 +28,13 @@ class UserListView(APIView):
         users = User.objects.all() 
         serializer = UserSerializer(users, many=True) 
         return Response(serializer.data)
+    
+class ProfileListView(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    queryset= Profile.objects.all().order_by('-created_at')
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
 
 class UserFollowerListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -72,7 +81,7 @@ class UserFollowView(APIView):
         try:
             follower = Follower.objects.get(user=followed_user,follower = request.user)
             follower.delete()
-            return Response({"message": "Unfollow successfully"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"message": "Unfollow successfully"}, status=status.HTTP_200_OK)
         except Follower.DoesNotExist:
             return Response({"error": "You do not follow this user"}, status=status.HTTP_404_NOT_FOUND)
         
@@ -117,7 +126,7 @@ class PostLikeView(APIView):
         
         try:
             post_like = PostLike.objects.get(user=request.user, post=post)
-            return Response({"message": "Unliked successfully"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"message": "Unliked successfully"}, status=status.HTTP_200_OK)
         except PostLike.DoesNotExist:
             return Response({"error": "You didn't liked this post."}, status=status.HTTP_404_NOT_FOUND)
 

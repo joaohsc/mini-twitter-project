@@ -21,13 +21,6 @@ class CreateUserView(APIView):
             profile = Profile.objects.create(user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class UserListView(APIView):
-    permission_classes = [IsAuthenticated]
-    def get(self,request, format=None):
-        users = User.objects.all() 
-        serializer = UserSerializer(users, many=True) 
-        return Response(serializer.data)
     
 class ProfileListView(generics.ListAPIView):
     serializer_class = ProfileSerializer
@@ -35,6 +28,39 @@ class ProfileListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
 
+class ProfileDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get_object(self, pk):
+        try:
+            return Profile.objects.get(user=pk)
+        except Profile.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        prof = self.get_object(pk)
+        serializer = ProfileSerializer(prof)
+        return Response(serializer.data)
+
+class ProfileFollowerListView(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self, **kwargs):     
+        followers = Follower.objects.filter(user= self.kwargs['pk'])
+        users = [ f.follower for f in followers ]
+        profiles = Profile.objects.filter(user__in= users).order_by('-created_at')
+        return profiles
+    
+class ProfileFollowingListView(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self, **kwargs):     
+        following = Follower.objects.filter(follower= self.kwargs['pk'])
+        users = [ f.user for f in following ]
+        profiles = Profile.objects.filter(user__in= users).order_by('-created_at')
+        return profiles
 
 class UserFollowerListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -94,6 +120,7 @@ class PostListCreateView(generics.ListCreateAPIView):
         user = self.request.user
         following = Follower.objects.filter(follower=user)
         users = [f.user for f in following]
+        users.append(self.request.user)
         posts = Post.objects.filter(user__in= users).order_by('-created_at')
         return posts
 
@@ -181,4 +208,4 @@ class PostDetailView(APIView):
         file = post.image
         post.delete()
         self.delete_file(file.path)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Post deleted successfuly"}, status=status.HTTP_200_OK)

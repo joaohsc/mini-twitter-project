@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime as dt
+from .validators import validate_image_size
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    created_at = models.DateTimeField(default = dt.now(), blank=True)
+    created_at = models.DateTimeField(auto_now_add = True)
     
     @property
     def followers_count(self):
@@ -15,7 +16,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
     text =  models.CharField(max_length=250)
-    image = models.ImageField()
+    image = models.ImageField(upload_to="images/",validators=[validate_image_size])
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     created_at = models.DateTimeField( auto_now_add = True )
     

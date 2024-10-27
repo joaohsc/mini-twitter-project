@@ -18,14 +18,15 @@ from datetime import timedelta
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+
+DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = []
 
 
 HOST1 = os.environ.get('RENDER_EXTERNAL_HOSTNAME1')
 HOST2 = os.environ.get('RENDER_EXTERNAL_HOSTNAME2')
-if DEBUG:
+if not DEBUG:
     ALLOWED_HOSTS.append(HOST1)
     ALLOWED_HOSTS.append(HOST2)
 
@@ -61,7 +62,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     )
     
 }

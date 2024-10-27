@@ -29,6 +29,9 @@ HOST2 = os.environ.get('RENDER_EXTERNAL_HOSTNAME2')
 if not DEBUG:
     ALLOWED_HOSTS.append(HOST1)
     ALLOWED_HOSTS.append(HOST2)
+    CSRF_TRUSTED_ORIGINS = [HOST1, HOST2]
+    
+
 
 # Application definition
 

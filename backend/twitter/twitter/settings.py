@@ -6,7 +6,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR.parent / 'data' / 'web'
+DATA_DIR = BASE_DIR.parent / 'data'
 
 from datetime import timedelta
 
@@ -143,10 +143,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = DATA_DIR / 'static'
+#STATIC_ROOT = DATA_DIR / 'static'
+
+STATIC_ROOT = BASE_DIR.parent / 'staticfiles'
 
 if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 

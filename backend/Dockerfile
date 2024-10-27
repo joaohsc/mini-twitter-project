@@ -16,12 +16,12 @@ RUN python -m venv /venv && \
   /venv/bin/pip install -r /twitter/requirements.txt && \
   adduser --disabled-password --no-create-home duser && \
   mkdir -p /staticfiles && \
-  mkdir -p /data/web/media && \
+  mkdir -p /data/media && \
   chown -R duser:duser /venv && \
   chown -R duser:duser /staticfiles && \
-  chown -R duser:duser /data/web/media && \
+  chown -R duser:duser /data/media && \
   chmod -R 755 /staticfiles && \
-  chmod -R 755 /data/web/media && \
+  chmod -R 755 /data/media && \
   chmod -R +x /scripts
 
 ENV PATH="/scripts:/venv/bin:$PATH"

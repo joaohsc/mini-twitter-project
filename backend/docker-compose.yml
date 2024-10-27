@@ -7,8 +7,8 @@ services:
       - 8000:8000
     volumes:
       - ./twitter:/twitter
-      - ./data/web/static:/data/web/static/
-      - ./data/web/media:/data/web/media/
+      - ./staticfiles:/staticfiles/
+      - ./data/media:/data/media/
     env_file:
       - .env
     depends_on:

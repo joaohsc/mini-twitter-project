@@ -4,7 +4,7 @@ from datetime import datetime as dt
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    created_at = models.DateTimeField( default = dt.now() )
+    created_at = models.DateTimeField(default = dt.now(), blank=True)
     
     @property
     def followers_count(self):

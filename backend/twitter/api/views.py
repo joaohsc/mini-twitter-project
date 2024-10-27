@@ -147,7 +147,7 @@ class PostDetailView(APIView):
 
     def check_Ownership(self,owner, user):
         if owner.id != user.id:
-            raise ValidationError("You do not own this item to edit!")
+            raise ValidationError({"message": "You do not own this item to edit!"})
 
     def get_object(self, pk):
         try:

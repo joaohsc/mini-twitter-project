@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from api.models import Post, PostLike, Follower, Profile
 
@@ -9,8 +10,16 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = { "password": { "write_only": True } }
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        email = validated_data.get('email', None)
+        if email is None:
+            raise ValidationError({"message":"The filed Email is required!"})
+        check_email = User.objects.filter(email = email).first()
+
+        if check_email:
+            raise ValidationError({"message":"This email already is registred!"})
+        user = User.objects.create_user(**validated_data)        
         return user
+
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username')
     email = serializers.EmailField(source='user.email')

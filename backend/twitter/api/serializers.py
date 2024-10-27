@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from api.models import Post
+from api.models import Post, PostLike, Follower
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,5 +15,5 @@ class UserSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ["id","text", "image", "user"]
+        fields = ["id","text", "image", "user", "created_at"]
         extra_kwargs = { "user": { "read_only": True } }

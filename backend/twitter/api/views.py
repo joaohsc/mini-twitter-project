@@ -62,24 +62,6 @@ class ProfileFollowingListView(generics.ListAPIView):
         profiles = Profile.objects.filter(user__in= users).order_by('-created_at')
         return profiles
 
-class UserFollowerListView(APIView):
-    permission_classes = [IsAuthenticated]
-    def get(self,request,pk, format=None):
-        followers = Follower.objects.filter(user=pk)
-        users = [ f.follower for f in followers ]
-
-        serializer = UserSerializer(users, many=True) 
-        return Response(serializer.data)
-
-class UserFollowingListView(APIView):
-    permission_classes = [IsAuthenticated]
-    def get(self,request,pk, format=None):
-        following = Follower.objects.filter(follower=pk)
-        users = [ f.user for f in following ]
-
-        serializer = UserSerializer(users, many=True) 
-        return Response(serializer.data)
-
 class UserFollowView(APIView):
     permission_classes = [IsAuthenticated]
     def get_object(self, pk):

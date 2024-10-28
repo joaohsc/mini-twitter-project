@@ -18,9 +18,9 @@ To start this project locally, follow the steps below:
 The project includes Users and Posts as its primary entities.
 ![eer](https://github.com/user-attachments/assets/a2199ae6-f69d-4ea6-868e-00307b34ecbe)
 
-## **Test Coverage(Use cases):**
+## **Use cases:**
 CASE 1: User Registration
-- Users should be able to sign up via the API by providing an email, username, and password.
+- Users should be able to sign up via the API by providing an email, username, and password. 
 - Use JWT to handle authentication for login and session management.
 
 CASE 2: Post Creation

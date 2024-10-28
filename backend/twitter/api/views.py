@@ -112,6 +112,15 @@ class PostListCreateView(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UserPostListView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self, **kwargs):
+        posts = Post.objects.filter(user= self.kwargs['pk']).order_by('-created_at')
+        return posts
+    
 class PostLikeView(APIView):
     permission_classes = [IsAuthenticated]
     def get_object(self, pk):
@@ -135,6 +144,7 @@ class PostLikeView(APIView):
         
         try:
             post_like = PostLike.objects.get(user=request.user, post=post)
+            post_like.delete()
             return Response({"message": "Unliked successfully"}, status=status.HTTP_200_OK)
         except PostLike.DoesNotExist:
             return Response({"error": "You didn't liked this post."}, status=status.HTTP_404_NOT_FOUND)

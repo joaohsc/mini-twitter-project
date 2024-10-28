@@ -102,7 +102,7 @@ class PostListCreateView(generics.ListCreateAPIView):
         user = self.request.user
         following = Follower.objects.filter(follower=user)
         users = [f.user for f in following]
-        users.append(self.request.user)
+        #users.append(self.request.user)
         posts = Post.objects.filter(user__in= users).order_by('-created_at')
         return posts
 

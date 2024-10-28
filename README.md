@@ -20,17 +20,25 @@ The project includes Users and Posts as its primary entities.
 
 ## **Use cases:**
 CASE 1: User Registration
-- Users should be able to sign up via the API by providing an email, username, and password. 
+- Users should be able to sign up via the API by providing an email, username, and password.
+  - Steps: user registration with api/user/register/
 - Use JWT to handle authentication for login and session management.
+  - Steps: Login with api/token to get access token. Then pass the access token to the requests with bearer auth. 
 
 CASE 2: Post Creation
 - Authenticated users can create a post with text and one image as content
+  - Steps: Create posts using api/post/
 - Posts can be liked by other users.
+  - Steps: Like/unlike posts with api/post/like/<post_ld>/
 
 CASE 3: Follow/Unfollow User
 - Users should be able to follow or unfollow others.
+  - Steps: follow/unfollow users with api/user/follow/<user_id>/
 - The feed should only show posts from users the authenticated user follows.
+  - Steps: List posts feed with api/post/
 
 CASE 4: Viewing Feed
 - The user can view a paginated list of posts from the users they follow.
+  - Steps: List posts feed with api/post/?page=1
 - Posts should be ordered by creation time, from most recent to oldest.
+  - Steps: List posts feed with api/post/ to see the ordering 
